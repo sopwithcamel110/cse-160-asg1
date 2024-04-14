@@ -89,7 +89,7 @@ function deserialize_shape_str(shape_str) {
     for (let i = 0; i < raw_shapes.length; i++) {
         let shape;
         let [type, x, y, r, g, b, a, size] = raw_shapes[i].split(",")
-        console.log(type[1])
+
         if (type[1] === 'c') {
             shape = new Circle()
             shape.segments = parseInt(type.substring(3))
