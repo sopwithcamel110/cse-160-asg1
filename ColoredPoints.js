@@ -56,6 +56,7 @@ const CIRCLE = 2;
 
 let g_selectedColor = [1.0, 0, 0, 1.0];
 let g_selectedSize = 5;
+let g_selectedSegment = 20;
 let g_selectedType = POINT;
 var g_shapesList = [];
 
@@ -88,9 +89,10 @@ function deserialize_shape_str(shape_str) {
     for (let i = 0; i < raw_shapes.length; i++) {
         let shape;
         let [type, x, y, r, g, b, a, size] = raw_shapes[i].split(",")
-        if (type[0] === 'c') {
+        console.log(type[1])
+        if (type[1] === 'c') {
             shape = new Circle()
-            shape.segments = parseInt(type.substring(2))
+            shape.segments = parseInt(type.substring(3))
         }
         else if (type === 't') {
             shape = new Triangle()
@@ -124,6 +126,9 @@ function addActionsForhtmlUI() {
     document.getElementById('drawPic').onclick = function () {
         drawpic();
     }
+    document.getElementById('eximgbtn').onclick = function () {
+        document.getElementById('serialtext').value = EXAMPLE_IMG
+    }
 
 
     document.getElementById('pointButton').onclick = function () {
@@ -152,6 +157,9 @@ function addActionsForhtmlUI() {
     document.getElementById('sizeSlide').addEventListener('mouseup', function () {
         g_selectedSize = this.value;
     });
+    document.getElementById('segmentSlide').addEventListener('mouseup', function () {
+        g_selectedSegment = this.value;
+    });
 
 }
 
@@ -179,6 +187,7 @@ function click(ev) {
         shape = new Triangle();
     } else if (g_selectedType == CIRCLE) {
         shape = new Circle();
+        shape.segments = g_selectedSegment
     }
     shape.position = [x, y];
     shape.color = g_selectedColor.slice();
@@ -204,8 +213,7 @@ function convertCoordinatesEventToGL(ev) {
 
 function renderAllShapes() {
     gl.clear(gl.COLOR_BUFFER_BIT);
-    var len = g_shapesList.length;
-    for (var i = 0; i < len; i++) {
+    for (var i = 0; i < g_shapesList.length; i++) {
         g_shapesList[i].render();
     }
 }
